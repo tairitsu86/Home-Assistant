@@ -1,0 +1,63 @@
+esphome:
+  name: "pc"
+  friendly_name: "pc"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "6tHEBMdhAhWWGzC8QXNu9tOLxXdoHI67MnuGtI4BtaU="
+
+ota:
+  password: "138d2f104ce323f22db2d5f3a6f0dfff"
+
+wifi:
+  ssid: CHIU_Home
+  password: wan1964**
+  manual_ip:
+    static_ip: 192.168.50.123
+    gateway: 192.168.50.1
+    subnet: 255.255.255.0
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Pwm Fallback Hotspot"
+    password: "DeImOMoFMGYx"
+
+captive_portal:
+
+sensor:
+  - platform: dht
+    model: DHT22
+    pin: 16
+    temperature:
+      id: "temperature"
+      name: "Computer Case Temperature"
+    humidity:
+      id: "humidity"
+      name: "Computer Case Humidity"
+    update_interval: 1s
+    
+i2c:
+  sda: 21
+  scl: 22
+
+font:
+  - file: "gfonts://Roboto"
+    id: roboto
+    size: 16
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x32"
+    # reset_pin:
+    address: 0x3C
+    lambda: |-
+      it.printf(0, 0, id(roboto), "T: %.2f°C",id(temperature).state);
+      it.printf(0, 16, id(roboto), "H: %.2f%%",id(humidity).state);

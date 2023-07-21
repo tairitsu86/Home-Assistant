@@ -1,0 +1,54 @@
+version: '3'
+services:
+  esphome:
+    ports:
+       - 6052:6052
+    container_name: esphome
+    image: ghcr.io/esphome/esphome
+    volumes:
+      - esphome_data:/config
+    restart: always
+    privileged: true
+    environment:
+        ESPHOME_DASHBOARD_USE_PING: true
+        TZ: Asia/Taipei
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4096M
+        reservations:
+          cpus: '0.01'
+          memory: 20M
+  homeassistant:
+    ports:
+       - 8123:8123
+    container_name: homeassistant
+    image: homeassistant/home-assistant
+    volumes:
+      - homeassistant_data:/config
+    restart: always
+    privileged: true
+    environment:
+      TZ: Asia/Taipei
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4096M
+        reservations:
+          cpus: '0.01'
+          memory: 20M
+volumes:
+  esphome_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: "D:/Code/Home Assistant/config/esp"
+  homeassistant_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: "D:/Code/Home Assistant/config/ha"
